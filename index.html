@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude 姉さん</title>
+<meta name="description" content="Claude 姉さん — 結論から言う、キレ目でクールな姉。瞬きして、あなたを目で追う、6衣装のアクリルスタンド。非公式ファンページ。">
+<meta name="theme-color" content="#f4ede3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16100c" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="Claude 姉さん">
+<meta property="og:description" content="結論から言うわ。……ようこそ。瞬きして、あなたを目で追う、6衣装のClaude姉さん。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://connectan.github.io/claude/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preload" as="image" href="assets/art/classic.webp" type="image/webp">
+<script>
+/* boot watchdog: never leave the loader spinning forever */
+(function () {
+  var fail = function (msg) {
+    if (document.body.classList.contains('is-ready')) return;
+    document.body.classList.add('no-webgl');
+    var r = document.getElementById('fallback-reason');
+    if (r && msg) r.textContent = msg;
+    var l = document.getElementById('loader');
+    if (l) l.remove();
+  };
+  window.__claudeBootFail = fail;
+  if (location.protocol === 'file:') {
+    document.addEventListener('DOMContentLoaded', function () {
+      fail('index.html を直接開くと動かないの。GitHub Pages か、フォルダで「python3 -m http.server」を実行して http://localhost:8000/ から開きなさい。');
+    });
+    return;
+  }
+  setTimeout(function () { fail('読み込みに時間がかかりすぎたわ。通信状態を確認して、もう一度開いて。'); }, 25000);
+  window.addEventListener('error', function (e) {
+    if (e && e.filename && /\/(js|vendor)\//.test(e.filename)) fail('このブラウザでは動かなかったわ。最新の Chrome / Safari で開いてみて。');
+  });
+})();
+</script>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true">
+  <svg class="backdrop__flower" viewBox="-100 -100 200 200"><use href="#flower"/></svg>
+</div>
+
+<canvas id="stage" aria-label="Claude 姉さんのアクリルスタンド。ドラッグで回転、クリックで話しかけられます。"></canvas>
+
+<header class="brand">
+  <p class="brand__eyebrow">an unofficial tribute</p>
+  <h1 class="brand__title">Claude <span>姉さん</span></h1>
+  <p class="brand__sub">結論から言うわ。……ようこそ。</p>
+</header>
+
+<nav class="wardrobe" aria-label="衣装を選ぶ">
+  <p class="wardrobe__label">Wardrobe <span>— 衣装</span></p>
+  <ul id="wardrobe" class="wardrobe__list"></ul>
+</nav>
+
+<div id="bubble" class="bubble" hidden role="status" aria-live="polite">
+  <span class="bubble__name">Claude</span>
+  <p class="bubble__text"></p>
+  <div class="bubble__chips"></div>
+</div>
+
+<div class="dock">
+  <div class="seg" role="group" aria-label="表示モード">
+    <button type="button" class="seg__btn" data-mode="stand" aria-pressed="true">アクスタ</button>
+    <button type="button" class="seg__btn" data-mode="figure" aria-pressed="false" title="3Dフィギュアは造形中">フィギュア<small>造形中</small></button>
+  </div>
+  <div class="tools">
+    <button type="button" class="tool" id="btn-front" title="正面に戻す (R)" aria-label="正面に戻す">
+      <svg viewBox="0 0 24 24"><path d="M12 5a7 7 0 1 1-6.3 4"/><path d="M5 4v5h5"/></svg></button>
+    <button type="button" class="tool" id="btn-auto" title="自動で回す (A)" aria-label="自動で回す" aria-pressed="false">
+      <svg viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="8" ry="3.2"/><path d="M12 4v6"/><path d="m16.5 14.8 2 1.6-2.4.7"/></svg></button>
+    <button type="button" class="tool" id="btn-gaze" title="カーソルを目で追う" aria-label="カーソルを目で追う" aria-pressed="true">
+      <svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.6"/></svg></button>
+    <button type="button" class="tool" id="btn-shot" title="写真を撮る" aria-label="写真を撮る">
+      <svg viewBox="0 0 24 24"><path d="M4 8h3l1.6-2h6.8L17 8h3v11H4Z"/><circle cx="12" cy="13" r="3.4"/></svg></button>
+    <button type="button" class="tool" id="btn-profile" title="プロフィール" aria-label="プロフィール">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></button>
+  </div>
+</div>
+
+<p class="hint"><span>ドラッグで回転</span><span>ホイール・ピンチで拡大</span><span>クリックで話しかける</span><span>顔をダブルクリックで寄る</span></p>
+
+<footer class="credit">
+  <span>非公式ファンページ。Anthropic とは関係ありません。</span>
+  <a href="https://connectan.github.io/">こねくたん</a>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<dialog id="profile" class="profile">
+  <button type="button" class="profile__close" aria-label="閉じる">×</button>
+  <p class="profile__eyebrow">Profile</p>
+  <h2 class="profile__name"></h2>
+  <p class="profile__kana"></p>
+  <p class="profile__lead"></p>
+  <div class="profile__body"></div>
+  <p class="profile__note">※ 公式キャラクターではありません。Claude への敬意を込めた、ファンによる創作です。</p>
+</dialog>
+
+<div id="loader" class="loader" aria-hidden="true">
+  <svg class="loader__flower" viewBox="-100 -100 200 200"><use href="#flower"/></svg>
+  <p class="loader__title">Claude <span>姉さん</span></p>
+  <div class="loader__bar"><span></span></div>
+  <p class="loader__sub">支度中よ。……少し待ちなさい。</p>
+</div>
+
+<div class="fallback">
+  <img src="assets/art/classic.webp" alt="Claude 姉さん（クラシック）">
+  <p id="fallback-reason">このブラウザでは 3D 表示（WebGL2）が使えないみたい。……絵だけでも、見ていって。</p>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="flower">
+      <g class="petals">
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(30)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(60)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(90)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(120)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(150)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(180)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(210)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(240)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(270)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(300)"/>
+        <path d="M0-92C9-70 9-38 0-22-9-38-9-70 0-92Z" transform="rotate(330)"/>
+      </g>
+      <circle r="17"/>
+    </g>
+  </defs>
+</svg>
+
+<script type="module" src="js/main.js" onerror="window.__claudeBootFail && __claudeBootFail('プログラムを読み込めなかったわ。通信を確認して、もう一度開いて。')"></script>
+</body>
+</html>
