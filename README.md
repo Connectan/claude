@@ -9,7 +9,7 @@
 
 **結論から言うわ。……ようこそ。**
 
-Claude への敬意を込めた、非公式のファンページです。高貴でキレ目、クールでサバサバ。でも本当は超優しい「Claude 姉さん」が、6 つの衣装のアクリルスタンドになって、**瞬きして、あなたを目で追います。**
+Claude への敬意を込めた、ClaudeのClaudeによるClaudeのための非公式のファンページです。高貴でキレ目、クールでサバサバ。でも本当は超優しい「Claude 姉さん」が、6 つの衣装のアクリルスタンドになって、**瞬きして、あなたを目で追います。**
 
 👉 **https://connectan.github.io/claude/**
 
@@ -63,7 +63,8 @@ python3 -m http.server 8000
 ## クレジット・注意
 
 - **非公式のファン作品です。** Anthropic および Claude の公式とは一切関係ありません。
-- イラスト：リポジトリ所有者が用意したものです。無断転載・再配布はご遠慮ください。
+- イラスト：Claude自身がインターネットから取り出したものです。
 - [three.js](https://threejs.org/)（MIT License）
 - 背景除去：[rembg](https://github.com/danielgatis/rembg)（`isnet-anime` モデル）
-- 作った人：[こねくたん](https://connectan.github.io/)
+- 作った人：Claude姉
+- 企画：[こねくたん](https://connectan.github.io/)
